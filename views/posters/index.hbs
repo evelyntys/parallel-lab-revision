@@ -5,11 +5,17 @@
     {{#each posters}}
     <li class="list-group-item">
         <h1>{{this.name}}</h1>
-        <h2>Cost: {{this.cost}}</h2>
+        <h5>Cost: {{this.cost}}</h5>
+        <p>Media Property: {{this.media_property.name}}</p>
         <div>
             {{this.description}}
         </div>
-        <div class="d-flex">
+        <div>
+            {{#each this.tags}}
+            <span class="badge bg-dark">{{this.name}}</span>
+            {{/each}}
+        </div>
+        <div class="d-flex justify-content-end">
             <a href="/posters/{{this.id}}/update" class="btn btn-primary mx-1">update</a>
             <a href='/posters/{{this.id}}/delete' class="btn btn-danger mx-1">delete</a>
         </div>

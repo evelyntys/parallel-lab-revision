@@ -5,11 +5,31 @@ const bookshelf = require('../bookshelf');
 //* name of the model must be first alphabet upper case and singular
 // * first argument to bookshelf.Model is the NAME of the model
 const Poster = bookshelf.model('Poster', {
-    tableName: 'poster'
+    tableName: 'poster',
+    media_property(){
+        return this.belongsTo('MediaProperty')
+    },
+    tags(){
+        return this.belongsToMany('Tag')
+    }
+})
+
+const MediaProperty = bookshelf.model('MediaProperty', {
+    tableName: 'media_properties',
+    posters(){
+        return this.hasMany('Poster');
+    }
+})
+
+const Tag = bookshelf.model('Tag', {
+    tableName: 'tags',
+    posters(){
+        return this.belongsToMany('Poster')
+    }
 })
 
 module.exports = {
-    Poster
+    Poster, MediaProperty, Tag
 }
 
 // module.exports = {

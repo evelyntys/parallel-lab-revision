@@ -26,7 +26,7 @@ var bootstrapField = function (name, object) {
 };
 
 
-const createProductForm = function(){
+const createProductForm = function(media_properties, tags){
     return forms.create
     ({'name': fields.string({
         required: true,
@@ -39,7 +39,27 @@ const createProductForm = function(){
     'description': fields.string({
         required: true,
         errorAfterField: true
-    })})
+    }),
+    'media_property_id': fields.string({
+        label: 'Media Properties', 
+        required: true,
+        errorAfterField: true,
+        cssClasses: {
+            label: ['form-label']
+        },
+        widget: widgets.select(),
+        choices: media_properties
+    }),
+    'tags': fields.string({
+        required: true,
+        errorAfterField: true,
+        cssClasses: {
+            label: ['form-label']
+        },
+        widget: widgets.multipleSelect(),
+        choices: tags
+    })
+})
 }
 
 module.exports={createProductForm, bootstrapField}
