@@ -9,6 +9,10 @@
         <div>
             {{this.description}}
         </div>
+        <div class="d-flex">
+            <a href="/posters/{{this.id}}/update" class="btn btn-primary mx-1">update</a>
+            <a href='/posters/{{this.id}}/delete' class="btn btn-danger mx-1">delete</a>
+        </div>
     </li>
     {{/each}}
 </ul>

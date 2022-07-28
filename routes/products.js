@@ -45,4 +45,73 @@ router.post('/create', function(req,res){
     })
 })
 
+router.get('/:poster_id/update', async function(req,res){
+    const posterId = req.params.poster_id;
+    const poster = await Poster.where({
+        id: posterId
+    }).fetch({
+        require: true
+    })
+    const productForm = createProductForm();
+
+    productForm.fields.name.value = poster.get('name');
+    productForm.fields.cost.value = poster.get('cost');
+    productForm.fields.description.value = poster.get('description')
+    
+    res.render('posters/update', {
+        form: productForm.toHTML(bootstrapField),
+        poster: poster.toJSON()
+    })
+})
+
+router.post('/:poster_id/update', async function(req,res){
+    const posterId = req.params.poster_id;
+    const poster = await Poster.where({
+        id: posterId
+    }).fetch({
+        require: true
+    });
+
+    const productForm = createProductForm();
+    productForm.handle(req, {
+        success: async function(form){
+            poster.set(form.data);
+            poster.save();
+            res.redirect('/posters')
+        },
+        error: async function(form){
+            res.render('posters/update', {
+                'form': form.toHTML(bootstrapField),
+                poster: poster.toJSON()
+            })
+        },
+        empty: function(form){
+            res.render('products/update', {
+                form: form.toHTML(bootstrapField)
+            })
+        }
+    })
+})
+
+router.get('/:poster_id/delete', async function(req,res){
+    const poster = await Poster.where({
+        id: req.params.poster_id
+    }).fetch({
+        require: true
+    });
+    res.render('posters/delete', {
+        poster: poster.toJSON()
+    })
+})
+
+router.post('/:poster_id/delete', async function(req,res){
+    const poster = await Poster.where({
+        id: req.params.poster_id
+    }).fetch({
+        require: true
+    });
+    await poster.destroy();
+    res.redirect('/posters')
+})
+
 module.exports = router;
