@@ -1,6 +1,7 @@
 const express = require('express');
 const { Poster, MediaProperty, Tag } = require('../models');
 const { createProductForm, bootstrapField } = require('../forms');
+const { checkIfAuthenticated } = require('../middlewares');
 const router = express.Router();
 
 
@@ -14,7 +15,7 @@ router.get('/', async function (req, res) {
     })
 })
 
-router.get('/create', async function (req, res) {
+router.get('/create', checkIfAuthenticated, async function (req, res) {
     const allMedia_Properties = await MediaProperty.fetchAll().map(
         (media_property) => {
             return [media_property.get('id'), media_property.get('name')]
@@ -22,13 +23,13 @@ router.get('/create', async function (req, res) {
     )
     const allTags = await Tag.fetchAll().map(tag => [tag.get('id'), tag.get('name')])
     const form = createProductForm(allMedia_Properties, allTags);
-    
+
     res.render('posters/create', {
         'form': form.toHTML(bootstrapField)
     })
 })
 
-router.post('/create', async function (req, res) {
+router.post('/create', checkIfAuthenticated, async function (req, res) {
     const allMedia_Properties = await MediaProperty.fetchAll().map(
         (media_property) => {
             return [media_property.get('id'), media_property.get('name')]
@@ -46,12 +47,13 @@ router.post('/create', async function (req, res) {
             // product.set('cost', form.data.cost);
             // product.set('description', form.data.description);
             // product.set('media_property_id', form.data.media_property_id);
-            let {tags, ...productData} = form.data;
+            let { tags, ...productData } = form.data;
             const product = new Poster(productData)
             await product.save(); //save the data into the database
-            if (tags){
+            if (tags) {
                 await product.tags().attach(tags.split(','))
             }
+            req.flash('success_messages', `new poster ${product.get('name')} has been successfully created`)
             res.redirect('/posters')
         },
         "error": function (form) {
@@ -90,7 +92,7 @@ router.get('/:poster_id/update', async function (req, res) {
     productForm.fields.description.value = poster.get('description');
     productForm.fields.media_property_id.value = poster.get('media_property_id');
     let selectedTags = await poster.related('tags').pluck('id');
-    productForm.fields.tags.value=selectedTags;
+    productForm.fields.tags.value = selectedTags;
 
     res.render('posters/update', {
         form: productForm.toHTML(bootstrapField),
@@ -117,10 +119,10 @@ router.post('/:poster_id/update', async function (req, res) {
     });
 
     const productForm = createProductForm(allMedia_Properties, allTags);
-    
+
     productForm.handle(req, {
         success: async function (form) {
-            let {tags, ...productData} = form.data;
+            let { tags, ...productData } = form.data;
             poster.set(productData);
             poster.save();
             let tagIds = tags.split(',');
