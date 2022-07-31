@@ -3,7 +3,8 @@
 <h1>create new poster</h1>
 <form method="POST">
     {{{form}}}
-    <input type="submit" value="submit" class="btn btn-primary mt-2"/>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+    <input type="submit" value="submit" class="btn btn-primary mt-2" />
 </form>
 {{/block}}
 {{/extends}}
