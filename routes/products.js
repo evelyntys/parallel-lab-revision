@@ -25,7 +25,10 @@ router.get('/create', checkIfAuthenticated, async function (req, res) {
     const form = createProductForm(allMedia_Properties, allTags);
 
     res.render('posters/create', {
-        'form': form.toHTML(bootstrapField)
+        'form': form.toHTML(bootstrapField),
+        cloudinaryName: process.env.CLOUDINARY_NAME,
+        cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+        cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
     })
 })
 
@@ -91,12 +94,16 @@ router.get('/:poster_id/update', async function (req, res) {
     productForm.fields.cost.value = poster.get('cost');
     productForm.fields.description.value = poster.get('description');
     productForm.fields.media_property_id.value = poster.get('media_property_id');
+    productForm.fields.image_url.value = poster.get('image_url');
     let selectedTags = await poster.related('tags').pluck('id');
     productForm.fields.tags.value = selectedTags;
 
     res.render('posters/update', {
         form: productForm.toHTML(bootstrapField),
-        poster: poster.toJSON()
+        poster: poster.toJSON(),
+        cloudinaryName: process.env.CLOUDINARY_NAME,
+        cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+        cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
     })
 })
 
@@ -136,7 +143,7 @@ router.post('/:poster_id/update', async function (req, res) {
         },
         error: async function (form) {
             res.render('posters/update', {
-                'form': form.toHTML(bootstrapField),
+                form: form.toHTML(bootstrapField),
                 poster: poster.toJSON()
             })
         },

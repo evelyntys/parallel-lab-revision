@@ -4,8 +4,10 @@
 <ul class="list-group">
     {{#each posters}}
     <li class="list-group-item">
+        <div class="row d-flex flex-row">
+        <div class="col">
         <h1>{{this.name}}</h1>
-        <h5>Cost: {{this.cost}}</h5>
+        <h5>Cost: {{divide this.cost 100}}</h5>
         <p>Media Property: {{this.media_property.name}}</p>
         <div>
             {{this.description}}
@@ -14,6 +16,11 @@
             {{#each this.tags}}
             <span class="badge bg-dark">{{this.name}}</span>
             {{/each}}
+        </div>
+        <div class="col">
+            <img src="{{this.image_url}}" style="height: 100px"/>
+        </div>
+        </div>
         </div>
         <div class="d-flex justify-content-end">
             <a href="/posters/{{this.id}}/update" class="btn btn-primary mx-1">update</a>
