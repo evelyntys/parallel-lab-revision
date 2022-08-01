@@ -119,4 +119,36 @@ const createLoginForm = function(){
     })
 }
 
-module.exports = { createProductForm, createRegistrationForm, bootstrapField, createLoginForm }
+const createSearchForm = (media_property, tags) => {
+    return forms.create({
+        name: fields.string({
+            required: false,
+            errorAfterField: true,
+        }),
+        min_cost: fields.number({
+            required: false,
+            errorAfterField: true,
+            validators: [validators.integer()]
+        }),
+        max_cost: fields.number({
+            required: false,
+            errorAfterField: true,
+            validators: [validators.integer()]
+        }),
+        media_property_id: fields.string({
+            label: 'Media Property',
+            required: false,
+            errorAfterField: true,
+            choices: media_property,
+            widget: widgets.select()
+        }),
+        tags: fields.string({
+            required: false,
+            errorAfterField: true,
+            choices: tags,
+            widget: widgets.multipleSelect()
+        })
+    })
+}
+
+module.exports = { createProductForm, createRegistrationForm, bootstrapField, createLoginForm, createSearchForm }

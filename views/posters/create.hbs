@@ -19,6 +19,7 @@
 <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
 
 <script>
+    console.log(document.querySelector('#id_image_url').value)
     function generateSignature(callback, params_to_sign) {
         axios.get('/cloudinary/sign', {
             params: {

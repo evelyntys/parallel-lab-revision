@@ -1,6 +1,11 @@
 {{#extends 'base'}}
 {{#block 'content'}}
 <h1>posters</h1>
+<a href="/posters/create" class="btn btn-primary">create new listing</a>
+<form method="GET">
+    {{{form}}}
+    <input type="submit" class="my-3 btn btn-primary" value="search"/>
+</form>
 <ul class="list-group">
     {{#each posters}}
     <li class="list-group-item">
